@@ -8,13 +8,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-@Controller
+@RestController
 @RequestMapping("/api")
 public class RegisterController {
 @Autowired
     RegisterService registerService;
 @GetMapping("/User_register_form")
     public ModelAndView showUserRegisterForm(){
+
     return new ModelAndView("RegistrationForm");
 }
 @PostMapping("/register_user")
