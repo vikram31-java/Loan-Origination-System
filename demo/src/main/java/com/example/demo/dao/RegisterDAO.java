@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RegisterDAO extends CrudRepository<User,Long> {
-    boolean existsByUserIdAndUserName(int UserId, String UserName);
-    User findByUserIdAndUserName(int UserId, String UserName);
+public interface RegisterDAO extends JpaRepository<User,Long> {
+    boolean existsByUserNameAndEmail(String userName, String email);
+    boolean existsByUserName(String userName);
 }
