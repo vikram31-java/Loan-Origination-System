@@ -1,36 +1,52 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Registration Successful</title>
+    <title>Account Created | LoanOS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .success-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 450px; border-top: 5px solid #28a745; }
-        .icon-circle { width: 80px; height: 80px; background-color: #d4edda; color: #28a745; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 20px; }
-        h1 { color: #28a745; margin-bottom: 10px; }
-        p { color: #555; font-size: 1.1em; line-height: 1.6; }
-        .user-name { color: #007bff; font-weight: bold; }
-        .btn-login { background-color: #007bff; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; margin-top: 25px; transition: background 0.3s; }
-        .btn-login:hover { background-color: #0056b3; }
+        body { background: #f0f2f5; height: 100vh; display: flex; align-items: center; }
+        .success-card { max-width: 500px; margin: auto; border: none; border-radius: 20px; }
+        .checkmark-circle {
+            width: 100px; height: 100px;
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 3.5rem;
+        }
     </style>
 </head>
 <body>
+<div class="container">
+    <div class="card success-card shadow-lg p-5 text-center">
+        <div class="checkmark-circle shadow-sm">
+            <i class="bi bi-check-lg"></i>
+        </div>
 
-    <div class="success-card">
-        <div class="icon-circle">✔</div>
-        <h1>Account Created!</h1>
+        <h2 class="fw-bold text-dark">Account Created!</h2>
+        <p class="text-muted">Welcome to the family, <strong>${name}</strong>.</p>
 
-        <p>
-            Congratulations <span class="user-name">${name}</span>!<br>
-            Your account has been successfully registered in the <strong>Loan Management System</strong>.
-        </p>
+        <div class="alert alert-info py-2 small text-start mt-4">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            <strong>What's next?</strong> You can now use your username and password to log in and start your loan application.
+        </div>
 
-        <p style="font-size: 0.9em; color: #888;">
-            You can now use your credentials to log in and manage your loans.
-        </p>
+        <div class="d-grid mt-4">
+            <a href="${pageContext.request.contextPath}/api/home" class="btn btn-primary btn-lg fw-bold shadow-sm">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In Now
+            </a>
+        </div>
 
-        <a href="/api/home" class="btn-login">Proceed to Login</a>
+        <div class="mt-4">
+            <small class="text-muted">Having trouble? <a href="#" class="text-decoration-none">Contact Support</a></small>
+        </div>
     </div>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

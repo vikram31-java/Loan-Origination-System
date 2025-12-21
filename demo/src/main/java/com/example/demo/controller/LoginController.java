@@ -2,11 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.User;
 import com.example.demo.service.LoginService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -15,87 +13,88 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/api")
 public class LoginController {
+
     @Autowired
     private LoginService loginService;
 
-//    @GetMapping("/home")
-//    public ModelAndView loginpageview() {
-//        return new ModelAndView("LoginPage");
-//    }
+    /**
+     * Renders the initial Login Page.
+     */
     @GetMapping("/home")
     public ModelAndView loginpageview() {
         ModelAndView mv = new ModelAndView("LoginPage");
-
-        // THIS LINE IS THE FIX:
-        // It tells the JSP: "Here is the 'user' object you are looking for."
         mv.addObject("user", new User());
-
         return mv;
     }
 
-
+    /**
+     * Handles the authentication logic.
+     */
     @PostMapping("/login")
     public ModelAndView login(@Valid @ModelAttribute("user") User user,
-                                   BindingResult result,
-                                   HttpSession session) {
+                              BindingResult result,
+                              HttpSession session) {
         ModelAndView mv = new ModelAndView();
 
-        // 1. Validation Check
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             mv.setViewName("LoginPage");
-            mv.addObject("message", "Invalid Details, Please check your input!");
-            mv.setStatus(HttpStatus.BAD_REQUEST);
+            mv.addObject("message", "Invalid Input Format!");
             return mv;
         }
 
         try {
-            // 2. Call Service ONCE
-            boolean isCorrect = loginService.authenticateUser(user);
+            // 1. Fetch the user first
+            User dbUser = loginService.findByUserName(user.getUserName());
 
-            if(isCorrect){
-                // 3. SAVE TO SESSION
-                session.setAttribute("loggedInUser", user);
+            // 2. Check if user exists AND password/role matches
+            if (dbUser != null && dbUser.getPassword().equals(user.getPassword())
+                    && dbUser.getRole().equals(user.getRole())) {
 
-                // 4. Setup Success View
-                mv.setViewName("LoginSuccess"); // Fixed spelling from "Sucess"
-                mv.addObject("Name", user.getUserName());
-                mv.addObject("Role", user.getRole());
-                mv.setStatus(HttpStatus.OK);
+                session.setAttribute("loggedInUser", dbUser);
+                session.setAttribute("Name", dbUser.getUserName());
+                session.setAttribute("Role", dbUser.getRole().toString());
+
+                mv.setViewName("LoginSuccess");
+            } else {
+                mv.setViewName("LoginFailure");
+                mv.addObject("message", "Incorrect credentials or role selection.");
             }
-        } catch (RuntimeException e) {
-            // 5. Handle Authentication Failure (e.g., Wrong Password/Role)
+        } catch (Exception e) {
             mv.setViewName("LoginFailure");
-            mv.addObject("message", e.getMessage());
-            mv.setStatus(HttpStatus.UNAUTHORIZED);
         }
 
         return mv;
     }
-    @GetMapping("/logout")
-    public ModelAndView logout(HttpServletRequest request) {
-        // 1. Invalidate the session to clear all user data
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
 
-        // 2. Redirect to a logout success page
-        ModelAndView mv = new ModelAndView("Logout");
-        mv.addObject("message", "You have been logged out successfully.");
-        return mv;
+    /**
+     * Protected Dashboard route.
+     */
+    @GetMapping("/dashboard")
+    public String dashboard(HttpSession session) {
+        // Basic Security Check: If no session, go back to login
+        if (session.getAttribute("Name") == null) {
+            return "redirect:/api/home";
+        }
+        return "Dashboard"; // Matches Dashboard.jsp
     }
+
+    /**
+     * Profile route.
+     */
     @GetMapping("/profile")
-    public ModelAndView getUserProfile(HttpSession session) {
-        User user = (User) session.getAttribute("loggedInUser");
-
-        if (user == null) {
-            // If no one is logged in, send them back to login page
-            return new ModelAndView("redirect:/api/home");
+    public String profile(HttpSession session) {
+        if (session.getAttribute("Name") == null) {
+            return "redirect:/api/home";
         }
-
-        ModelAndView mv = new ModelAndView("UserProfile"); // Points to UserProfile.jsp
-        mv.addObject("user", user);
-        return mv;
+        return "UserProfile"; // Matches UserProfile.jsp
     }
 
+    /**
+     * Destroys session and shows Logout page.
+     */
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "Logout"; // Matches Logout.jsp
     }
+}

@@ -1,33 +1,64 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login Failed</title>
+    <title>Access Denied | LoanOS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fff5f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .failure-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 450px; border-top: 5px solid #dc3545; }
-        h2 { color: #dc3545; margin-bottom: 15px; }
-        .error-msg { color: #555; font-size: 1.1em; margin-bottom: 30px; line-height: 1.6; }
-        .btn-register { background-color: #28a745; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; transition: background 0.3s; }
-        .btn-register:hover { background-color: #218838; }
-        .back-link { display: block; margin-top: 20px; color: #666; font-size: 0.9em; }
+        body { background-color: #f8f9fa; height: 100vh; display: flex; align-items: center; }
+        .failure-box { max-width: 450px; margin: auto; background: white; border-radius: 15px; overflow: hidden; }
+        .icon-badge { font-size: 3rem; color: #dc3545; margin-bottom: 15px; }
     </style>
 </head>
 <body>
+<div class="container">
+    <div class="failure-box shadow-lg border-0">
+        <div class="bg-danger p-4 text-center text-white">
+            <h4 class="m-0 fw-bold"><i class="bi bi-shield-lock-fill me-2"></i>Access Denied</h4>
+        </div>
 
-    <div class="failure-card">
-        <div style="font-size: 50px; margin-bottom: 10px;">⚠️</div>
-        <h2>Invalid Details, Please Register!</h2>
+        <div class="p-4 text-center">
+            <div class="icon-badge">
+                <i class="bi bi-exclamation-octagon"></i>
+            </div>
 
-        <p class="error-msg">
-            The account details you entered were not found in our system.
-            If you are a new user, please create an account to access the Loan Management System.
-        </p>
+            <h5 class="fw-bold text-dark">Invalid Credentials</h5>
 
-        <a href="/api/User_register_form" class="btn-register">Create New Account</a>
+            <p class="text-secondary mb-4">
+                <c:choose>
+                    <c:when test="${not empty message}">
+                        ${message}
+                    </c:when>
+                    <c:otherwise>
+                        We couldn't find an account matching those details. Please check your username and password.
+                    </c:otherwise>
+                </c:choose>
+            </p>
 
-        <a href="/api/home" class="back-link">Try Logging In Again</a>
+            <div class="bg-light p-3 rounded mb-4 text-start">
+                <small class="text-uppercase fw-bold text-muted d-block mb-1">Quick Fixes:</small>
+                <ul class="mb-0 mt-1 small text-secondary">
+                    <li><i class="bi bi-dot"></i> Ensure <strong>Caps Lock</strong> is turned off.</li>
+                    <li><i class="bi bi-dot"></i> Check for accidental leading/trailing spaces.</li>
+                    <li><i class="bi bi-dot"></i> New user? Ensure your registration was successful.</li>
+                </ul>
+            </div>
+
+            <div class="d-grid gap-2">
+                <a href="${pageContext.request.contextPath}/api/home" class="btn btn-dark btn-lg py-2 fs-6">
+                    <i class="bi bi-arrow-left me-2"></i>Back to Login
+                </a>
+                <a href="${pageContext.request.contextPath}/api/User_register_form" class="btn btn-outline-primary py-2 fs-6">
+                    Create New Account
+                </a>
+            </div>
+
+            <hr class="my-4">
+            <p class="small text-muted mb-0">Forgot your password? <a href="#" class="text-decoration-none">Contact Support</a></p>
+        </div>
     </div>
-
+</div>
 </body>
 </html>

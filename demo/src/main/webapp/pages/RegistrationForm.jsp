@@ -1,140 +1,122 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Registration - Loan Management System</title>
+    <title>Join LoanOS | Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .reg-container { background: white; padding: 35px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); width: 400px; }
-        h1 { color: #333; text-align: center; margin-bottom: 25px; font-size: 24px; }
-
-        .form-group { margin-bottom: 15px; position: relative; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
-        input[type="text"], input[type="email"], input[type="password"], select {
-            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px;
-        }
-        input:focus { border-color: #007bff; outline: none; box-shadow: 0 0 5px rgba(0,123,255,0.2); }
-
-        /* Status Indicator Styles */
-        #userStatus { font-size: 0.85em; display: block; margin-top: 5px; font-weight: bold; }
-
-        /* Checklist Styles */
-        #checklist { font-size: 0.85em; list-style-type: none; padding: 10px; background: #f9f9f9; border-radius: 6px; margin-top: 10px; }
-        .invalid { color: #dc3545; transition: 0.3s; }
-        .valid { color: #28a745; transition: 0.3s; font-weight: bold; }
-
-        input[type="submit"] {
-            width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 6px;
-            font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s;
-        }
-        input[type="submit"]:hover { background-color: #0056b3; }
-
-        .footer-links { text-align: center; margin-top: 20px; font-size: 0.9em; }
-        .footer-links a { color: #007bff; text-decoration: none; }
+        body { background: #f0f2f5; font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; align-items: center; }
+        .reg-card { border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .availability-text { font-size: 0.85rem; margin-top: 5px; min-height: 20px; }
     </style>
 </head>
 <body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card reg-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-plus-fill text-primary" style="font-size: 2.5rem;"></i>
+                    <h2 class="fw-bold text-primary mt-2">Create Account</h2>
+                    <p class="text-muted">Join the Loan Origination System</p>
+                </div>
 
-<div class="reg-container">
-    <h1>Create Account</h1>
+                <c:if test="${not empty serverError}">
+                    <div class="alert alert-danger py-2 small d-flex align-items-center">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> ${serverError}
+                    </div>
+                </c:if>
 
-    <form name="RegistrationForm" action="/api/register_user" method="post">
+                <form action="${pageContext.request.contextPath}/api/register_user" method="post" id="regForm">
+                    <%-- Manual CSRF hidden field if not using spring:form tags --%>
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
-        <div class="form-group">
-            <label>User Name</label>
-            <input type="text" id="userName" name="userName" placeholder="Enter your username" required onkeyup="checkAvailability()"/>
-            <span id="userStatus"></span>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="bi bi-person"></i></span>
+                            <input type="text" name="userName" id="userName" class="form-control" placeholder="Choose unique username" required>
+                        </div>
+                        <div id="usernameFeedback" class="availability-text"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="bi bi-envelope"></i></span>
+                            <input type="email" name="email" class="form-control" placeholder="name@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="bi bi-lock"></i></span>
+                            <input type="password" name="password" class="form-control" placeholder="Min. 8 characters" required minlength="8">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">User Role</label>
+                        <select name="role" class="form-select border-primary-subtle" required>
+                            <option value="" selected disabled>Select your role...</option>
+                            <option value="CUSTOMER">Customer (Borrower)</option>
+                            <option value="LOAN_OFFICER">Loan Officer (Approver)</option>
+                            <option value="ADMIN">System Administrator</option>
+                        </select>
+                        <div class="form-text small"><i class="bi bi-info-circle"></i> Permissions are based on the selected role.</div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm" id="submitBtn">
+                            <i class="bi bi-check-circle me-2"></i>Register Now
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4">
+                    <span class="text-muted">Already have an account? <a href="${pageContext.request.contextPath}/api/home" class="text-decoration-none fw-bold">Login</a></span>
+                </div>
+            </div>
         </div>
-
-        <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" name="email" placeholder="example@mail.com" required/>
-        </div>
-
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="password" name="password" required
-                   placeholder="Create a strong password"
-                   pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^&+=!]).{8,}$" />
-
-            <ul id="checklist">
-                <li id="len" class="invalid">✖ Minimum 8 characters</li>
-                <li id="upper" class="invalid">✖ At least one uppercase letter</li>
-                <li id="num" class="invalid">✖ At least one number</li>
-                <li id="spec" class="invalid">✖ At least one special character</li>
-            </ul>
-        </div>
-
-        <div class="form-group">
-            <label>Select Role</label>
-            <select name="role">
-                <option value="CUSTOMER">Customer</option>
-                <option value="LOAN_OFFICER">Loan Officer</option>
-                <option value="ADMIN">Admin</option>
-            </select>
-        </div>
-
-        <input type="submit" value="Register Now"/>
-    </form>
-
-    <div class="footer-links">
-        Already have an account? <a href="/api/home">Login here</a>
     </div>
 </div>
 
 <script>
-    // --- USERNAME AVAILABILITY CHECK ---
-    function checkAvailability() {
-        const username = document.getElementById("userName").value;
-        const status = document.getElementById("userStatus");
+    const usernameInput = document.getElementById('userName');
+    const feedback = document.getElementById('usernameFeedback');
+    const submitBtn = document.getElementById('submitBtn');
+    const contextPath = '${pageContext.request.contextPath}';
 
+    usernameInput.addEventListener('input', function() {
+        const username = this.value;
         if (username.length < 3) {
-            status.innerHTML = "";
+            feedback.innerHTML = '';
             return;
         }
 
-        // Fetches the boolean from your new controller endpoint
-        fetch('/api/check-username?username=' + encodeURIComponent(username))
+        feedback.innerHTML = '<span class="text-muted"><i class="bi bi-hourglass-split"></i> Checking...</span>';
+
+        fetch(contextPath + '/api/check-username?username=' + encodeURIComponent(username))
             .then(response => response.json())
             .then(isTaken => {
                 if (isTaken) {
-                    status.style.color = "#dc3545";
-                    status.innerHTML = "✖ Username already taken";
+                    feedback.innerHTML = '<i class="bi bi-x-circle-fill"></i> Username already taken';
+                    feedback.className = 'availability-text text-danger animate__animated animate__shakeX';
+                    submitBtn.disabled = true;
                 } else {
-                    status.style.color = "#28a745";
-                    status.innerHTML = "✔ Ready to go!";
+                    feedback.innerHTML = '<i class="bi bi-check-circle-fill"></i> Username available';
+                    feedback.className = 'availability-text text-success';
+                    submitBtn.disabled = false;
                 }
             })
-            .catch(err => console.error("Error checking username:", err));
-    }
-
-    // --- PASSWORD CHECKLIST LOGIC ---
-    const pwdInput = document.getElementById("password");
-    const lenReq = document.getElementById("len");
-    const upperReq = document.getElementById("upper");
-    const numReq = document.getElementById("num");
-    const specReq = document.getElementById("spec");
-
-    pwdInput.addEventListener("input", function() {
-        const value = pwdInput.value;
-        updateStatus(lenReq, value.length >= 8, "Minimum 8 characters");
-        updateStatus(upperReq, /[A-Z]/.test(value), "At least one uppercase letter");
-        updateStatus(numReq, /[0-9]/.test(value), "At least one number");
-        updateStatus(specReq, /[@#$%^&+=!]/.test(value), "At least one special character (@#$%^&+=!)");
+            .catch(err => {
+                console.error('Error checking username:', err);
+                feedback.innerHTML = '';
+            });
     });
-
-    function updateStatus(element, condition, text) {
-        if (condition) {
-            element.classList.remove("invalid");
-            element.classList.add("valid");
-            element.innerText = "✔ " + text;
-        } else {
-            element.classList.remove("valid");
-            element.classList.add("invalid");
-            element.innerText = "✖ " + text;
-        }
-    }
 </script>
-
 </body>
 </html>

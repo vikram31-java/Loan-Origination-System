@@ -1,19 +1,15 @@
 package com.example.demo.entity;
 
-<<<<<<< HEAD
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-=======
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
->>>>>>> d3ba0c9b68b2ce886fdb3ef088aa66111499f13a
+
 @Entity
 @Table(name = "User") // Matches your CREATE TABLE name
 public class User {
