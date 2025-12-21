@@ -19,8 +19,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+@RestController
+
 @Controller
 @Validated
+
 @RequestMapping("/api")
 public class RegisterController {
     @Autowired
