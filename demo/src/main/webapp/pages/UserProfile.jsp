@@ -38,7 +38,7 @@
                         <div class="profile-avatar shadow-sm">
                             <i class="bi bi-person-badge"></i>
                         </div>
-                        <h3 class="fw-bold text-dark">${Name}</h3>
+                        <h3 class="fw-bold text-dark">${sessionScope.loggedInUser.userName}</h3>
                         <p class="text-muted small mb-4">Manage your personal account information</p>
                     </div>
 
@@ -49,21 +49,21 @@
                         <div class="mb-3">
                             <label class="form-label"><i class="bi bi-person me-2"></i>Username</label>
                             <input type="text" class="form-control form-control-lg readonly-field"
-                                   value="${Name}" readonly>
+                                   value="${sessionScope.loggedInUser.userName}" readonly>
                             <div class="form-text">Usernames cannot be changed.</div>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label"><i class="bi bi-envelope me-2"></i>Email Address</label>
                             <input type="email" name="email" class="form-control form-control-lg readonly-field"
-                                   value="${loggedInUser.email}" readonly>
+                                   value="${sessionScope.loggedInUser.email}" readonly>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label"><i class="bi bi-shield-lock me-2"></i>Assigned Role</label>
                             <div class="input-group">
                                 <input type="text" class="form-control form-control-lg readonly-field"
-                                       value="${Role}" readonly>
+                                       value="${sessionScope.loggedInUser.role}" readonly>
                                 <span class="input-group-text bg-white">
                                     <i class="bi bi-patch-check-fill text-primary"></i>
                                 </span>

@@ -33,7 +33,7 @@
                 </li>
 
                 <c:choose>
-                    <c:when test="${Role == 'ADMIN'}">
+                    <c:when test="${sessionScope.loggedInUser.role == 'ADMIN'}">
                         <li class="nav-item">
                             <a class="nav-link text-info" href="${pageContext.request.contextPath}/api/admin/users">
                                 <i class="bi bi-people-fill me-1"></i> Manage Users
@@ -41,7 +41,7 @@
                         </li>
                     </c:when>
 
-                    <c:when test="${Role == 'LOAN_OFFICER'}">
+                    <c:when test="${sessionScope.loggedInUser.role == 'LOAN_OFFICER'}">
                         <li class="nav-item">
                             <a class="nav-link text-warning" href="${pageContext.request.contextPath}/api/officer/queue">
                                 <i class="bi bi-clipboard-check-fill me-1"></i> Credit Evaluation
@@ -49,7 +49,7 @@
                         </li>
                     </c:when>
 
-                    <c:when test="${Role == 'CUSTOMER'}">
+                    <c:when test="${sessionScope.loggedInUser.role == 'CUSTOMER'}">
                         <li class="nav-item">
                             <a class="nav-link text-success" href="${pageContext.request.contextPath}/api/loan/apply">
                                 <i class="bi bi-file-earmark-plus-fill me-1"></i> Apply for Loan
@@ -64,7 +64,7 @@
                     <a href="#" class="text-white text-decoration-none dropdown-toggle d-flex align-items-center"
                        id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-person-circle fs-5 me-2"></i>
-                        <span class="d-none d-md-inline">${Name}</span>
+                        <span class="d-none d-md-inline">${sessionScope.loggedInUser.userName}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="${pageContext.request.contextPath}/api/profile">
