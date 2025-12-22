@@ -22,12 +22,12 @@
     <div class="welcome-section shadow-sm rounded-3 mb-5">
         <div class="row align-items-center">
             <div class="col-md-8">
-                <h2 class="fw-bold text-dark mb-1">Hello, ${Name}!</h2>
+                <h2 class="fw-bold text-dark mb-1">Hello, ${sessionScope.loggedInUser.userName}!</h2>
                 <p class="text-muted mb-0">Manage your loans and account settings in real-time.</p>
             </div>
             <div class="col-md-4 text-md-end mt-3 mt-md-0">
                 <span class="badge bg-primary px-3 py-2 fs-6 shadow-sm">
-                    <i class="bi bi-person-badge me-2"></i>Portal: ${Role}
+                    <i class="bi bi-person-badge me-2"></i>Portal: ${sessionScope.loggedInUser.role}
                 </span>
             </div>
         </div>
@@ -38,7 +38,7 @@
     <div class="row g-4">
         <c:choose>
             <%-- CUSTOMER VIEW --%>
-            <c:when test="${Role == 'CUSTOMER'}">
+            <c:when test="${sessionScope.loggedInUser.role == 'CUSTOMER'}">
                 <div class="col-md-4">
                     <div class="card h-100 dashboard-card shadow-sm border-top border-success border-4">
                         <div class="card-body">

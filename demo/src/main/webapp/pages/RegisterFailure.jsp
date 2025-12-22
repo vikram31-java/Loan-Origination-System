@@ -29,7 +29,7 @@
                 </c:if>
 
                 <p class="text-muted mb-4">
-                    We couldn't create your account at this time. This is usually caused by a duplicate username or a temporary system interruption.
+                    We could not create your account at this time. This is usually caused by a duplicate username or a temporary system interruption.
                 </p>
 
                 <div class="d-grid gap-2">
